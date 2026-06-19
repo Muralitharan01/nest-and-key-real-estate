@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Seed Properties — Nest&Key</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --gold: #C9A84C; --navy: #0A0F1E; --card: #111827; --green: #22c55e; --red: #ef4444; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); color: #E8EAF0; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; padding: 3rem 1rem; }
+
+    h1  { font-size: 1.6rem; color: #fff; margin-bottom: .3rem; }
+    h1 span { color: var(--gold); }
+    .sub { color: #8892a4; font-size: .88rem; margin-bottom: 2.5rem; }
+
+    .progress-box {
+      background: var(--card);
+      border: 1px solid rgba(201,168,76,.15);
+      border-radius: 14px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 2rem;
+    }
+    .progress-box h2 { font-size: 1rem; margin-bottom: 1.2rem; color: #fff; }
+
+    /* Overall progress bar */
+    .bar-wrap { background: rgba(255,255,255,.06); border-radius: 99px; height: 10px; margin-bottom: .5rem; overflow: hidden; }
+    .bar-fill  { height: 100%; background: linear-gradient(90deg, var(--gold), #b8922e); border-radius: 99px; transition: width .4s ease; width: 0%; }
+    .bar-label { font-size: .8rem; color: #8892a4; margin-bottom: 1.5rem; }
+
+    /* Per-property rows */
+    .prop-row {
+      display: flex;
+      align-items: center;
+      gap: .8rem;
+      padding: .55rem 0;
+      border-bottom: 1px solid rgba(255,255,255,.04);
+      font-size: .84rem;
+    }
+    .prop-row:last-child { border-bottom: none; }
+    .status-icon { font-size: 1rem; width: 22px; text-align: center; flex-shrink: 0; }
+    .prop-name   { flex: 1; color: #fff; font-weight: 500; }
+    .prop-cat    { font-size: .73rem; padding: .2rem .7rem; border-radius: 50px; background: rgba(201,168,76,.1); border: 1px solid rgba(201,168,76,.2); color: var(--gold); }
+    .prop-status { font-size: .75rem; color: #8892a4; min-width: 80px; text-align: right; }
+
+    /* Final result card */
+    .result-card {
+      background: var(--card);
+      border: 1px solid rgba(34,197,94,.25);
+      border-radius: 14px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 680px;
+      text-align: center;
+      display: none;
+    }
+    .result-card.show { display: block; }
+    .result-card .big-icon { font-size: 3rem; margin-bottom: .8rem; }
+    .result-card h2 { font-size: 1.3rem; color: #fff; margin-bottom: .5rem; }
+    .result-card p  { font-size: .88rem; color: #8892a4; margin-bottom: 1.2rem; }
+    .btn-go {
+      display: inline-block;
+      padding: .75rem 2rem;
+      background: linear-gradient(135deg, var(--gold), #b8922e);
+      color: var(--navy);
+      font-weight: 700;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: .9rem;
+      margin: .3rem;
+      transition: opacity .2s;
+    }
+    .btn-go:hover { opacity: .88; }
+    .btn-outline {
+      display: inline-block;
+      padding: .75rem 2rem;
+      border: 1px solid rgba(255,255,255,.2);
+      color: #fff;
+      font-weight: 500;
+      border-radius: 50px;
+      text-decoration: none;
+      font-size: .9rem;
+      margin: .3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🏠 Nest<span>&Key</span> — Property Seeder</h1>
+  <p class="sub">Adding 10 sample properties to Firebase Firestore…</p>
+
+  <div class="progress-box">
+    <h2>Upload Progress</h2>
+    <div class="bar-wrap"><div class="bar-fill" id="bar"></div></div>
+    <div class="bar-label" id="bar-label">Starting…</div>
+
+    <!-- Property rows injected by JS -->
+    <div id="prop-list"></div>
+  </div>
+
+  <!-- Success card shown after all done -->
+  <div class="result-card" id="result-card">
+    <div class="big-icon">🎉</div>
+    <h2>10 Properties Added Successfully!</h2>
+    <p>Your Firestore database is populated. Head to the landing page to see them live.</p>
+    <a href="index.html"           class="btn-go">🏠 View Landing Page</a>
+    <a href="admin-dashboard.html" class="btn-outline">📊 Admin Dashboard</a>
+  </div>
+
+<script type="module">
+  import { addProperty } from "./js/properties.js";
+
+  // ── 10 Realistic Indian Properties ───────────────────────────────────────
+  // Images: free Unsplash CDN (no API key needed, direct photo URLs)
+  const properties = [
+    {
+      name:        "Sunrise Heights Residency",
+      description: "A serene 3BHK residential complex surrounded by lush greenery, featuring modular kitchen, covered car park, and 24/7 security in a gated community.",
+      price:       4800000,
+      location:    "Anna Nagar, Chennai",
+      category:    "Residential",
+      imageUrl:    "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=700&q=80&auto=format&fit=crop",
+    },
+    {
+      name:        "The Emerald Villas",
+      description: "Ultra-luxury 5BHK standalone villa with private pool, home theatre, landscaped garden, and premium imported fittings in an exclusive gated enclave.",
+      price:       28500000,
+      location:    "Aundh, Pune",
+      category:    "Luxury Villas",
+      imageUrl:    "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=700&q=80&auto=format&fit=crop",
+    },
+    {
+      name:        "Skyline Business Hub",
+      description: "Grade-A commercial office space on the 8th floor with panoramic city views, high-speed fibre, dedicated parking floors, and a centrally air-conditioned lobby.",
+      price:       12000000,
+      location:    "Bandra Kurla Complex, Mumbai",
+      category:    "Commercial",
+      imageUrl:    "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=700&q=80&auto=format&fit=crop",
+    },
+    {
+      name:        "Blue Lagoon Apartments",
+      description: "Spacious 2BHK apartment with rooftop infinity pool access, gym, co-working lounge, and breathtaking sea views just 200 m from the beach.",
+      price:       6750000,
+      location:    "Panaji, Goa",
+      category:    "Apartments",
+      imageUrl:    "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=700&q=80&auto=format&fit=crop",
+    },
+    {
+      name:        "Greenfield Corner Plot",
+      description: "East-facing DTCP-approved residential plot in a fast-developing layout. Ready for immediate construction with all utilities at site.",
+      price:       1950000,
+      location:    "Saravanampatti, Coimbatore",
+      category:    "Plots",
+      imageUrl:    "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=700&q=80&auto=format&fit=crop",
+    },
+    {
+      name:        "Royal Palms Villa",
+      description: "An architectural masterpiece — 4BHK luxury villa with Italian marble flooring, smart home automation, solar panels, and a lush private garden.",
+      price:       35000000,
+      location:    "Whitefield, Bangalore",
+      category:    "Luxury Villas",
+      imageUrl:    "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=700&q=80&auto=format&fit=crop",
+    },
+    {
+      name:        "Metro Gateway Apartments",
+      description: "Ready-to-move 1BHK & 2BHK apartments, 5 min from Hitech City metro. Club house, children's play area, and 24/7 power backup included.",
+      price:       5200000,
+      location:    "Hitech City, Hyderabad",
+      category:    "Apartments",
+      imageUrl:    "https://images.unsplash.com/photo-1555636222-cae831e670b3?w=700&q=80&auto=format&fit=crop",
+    },
+    {
+      name:        "Heritage Commercial Plaza",
+      description: "Prime ground-floor retail space in a high-footfall commercial complex. Ideal for showroom, bank branch, or F&B outlet. Corner unit with two frontages.",
+      price:       8900000,
+      location:    "Connaught Place, New Delhi",
+      category:    "Commercial",
+      imageUrl:    "https://images.unsplash.com/photo-1497366216548-37526070297c?w=700&q=80&auto=format&fit=crop",
+    },
+    {
+      name:        "Meadow View Family Home",
+      description: "Charming 3BHK independent house with teak wood interiors, private backyard, rainwater harvesting system, and a children's play area in a peaceful residential street.",
+      price:       3200000,
+      location:    "Tiruppur, Tamil Nadu",
+      category:    "Residential",
+      imageUrl:    "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=700&q=80&auto=format&fit=crop",
+    },
+    {
+      name:        "Golden Acres Farm Plot",
+      description: "Large 2400 sq ft NA-converted agricultural plot with road access and electricity connection. Perfect for weekend farmhouse or organic farming venture.",
+      price:       980000,
+      location:    "Hosur Road, Bangalore Rural",
+      category:    "Plots",
+      imageUrl:    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=700&q=80&auto=format&fit=crop",
+    },
+  ];
+
+  // ── Build the UI rows first ───────────────────────────────────────────────
+  const listEl = document.getElementById("prop-list");
+  const rows   = [];
+
+  properties.forEach((p, i) => {
+    const row = document.createElement("div");
+    row.className = "prop-row";
+    row.id = `row-${i}`;
+    row.innerHTML = `
+      <span class="status-icon" id="icon-${i}">⏳</span>
+      <span class="prop-name">${p.name}</span>
+      <span class="prop-cat">${p.category}</span>
+      <span class="prop-status" id="status-${i}">Waiting…</span>`;
+    listEl.appendChild(row);
+    rows.push(row);
+  });
+
+  // ── Upload one by one with visual feedback ────────────────────────────────
+  const bar      = document.getElementById("bar");
+  const barLabel = document.getElementById("bar-label");
+
+  async function seedAll() {
+    let done = 0;
+
+    for (let i = 0; i < properties.length; i++) {
+      // Mark as in-progress
+      document.getElementById(`icon-${i}`).textContent   = "🔄";
+      document.getElementById(`status-${i}`).textContent = "Uploading…";
+      barLabel.textContent = `Adding property ${i + 1} of ${properties.length}: ${properties[i].name}`;
+
+      try {
+        await addProperty(properties[i]);
+        document.getElementById(`icon-${i}`).textContent   = "✅";
+        document.getElementById(`status-${i}`).style.color = "#86efac";
+        document.getElementById(`status-${i}`).textContent = "Done ✓";
+      } catch (err) {
+        document.getElementById(`icon-${i}`).textContent   = "❌";
+        document.getElementById(`status-${i}`).style.color = "#fca5a5";
+        document.getElementById(`status-${i}`).textContent = "Failed";
+        console.error(`Error adding "${properties[i].name}":`, err);
+      }
+
+      done++;
+      const pct = Math.round((done / properties.length) * 100);
+      bar.style.width      = pct + "%";
+      barLabel.textContent = `${pct}% complete — ${done} of ${properties.length} added`;
+    }
+
+    // All done!
+    barLabel.textContent = "✅ All 10 properties uploaded to Firestore!";
+    document.getElementById("result-card").classList.add("show");
+  }
+
+  // Kick off immediately on page load
+  seedAll();
+</script>
+</body>
+</html>

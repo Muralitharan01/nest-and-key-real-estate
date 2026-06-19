@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login — Nest&Key</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <div class="login-page">
+    <div class="login-card">
+      <div class="login-logo">🏠 Nest<span>&Key</span></div>
+      <p class="login-sub">Admin Portal — Authorised Access Only</p>
+
+      <!-- Error banner -->
+      <div class="login-error" id="login-error" role="alert"></div>
+
+      <form id="login-form">
+        <div class="form-field">
+          <label for="email">Email Address</label>
+          <input id="email" type="email" placeholder="admin@nestandkey.in"
+                 autocomplete="email" required />
+        </div>
+        <div class="form-field">
+          <label for="password">Password</label>
+          <input id="password" type="password" placeholder="••••••••"
+                 autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn-login" id="login-btn">Sign In</button>
+      </form>
+
+      <p style="text-align:center; margin-top:1.2rem; font-size:.78rem; color:var(--text-muted);">
+        <a href="index.html" style="color:var(--accent); text-decoration:none;">← Back to website</a>
+      </p>
+    </div>
+  </div>
+
+  <script type="module">
+    // ── FIX: use redirectIfLoggedIn() (not guardAdmin!) on the login page.
+    // guardAdmin() redirects to index.html when NOT logged in — calling it
+    // here caused an infinite loop: login page → not authed → redirect to
+    // login page → not authed → redirect … 
+    // redirectIfLoggedIn() only acts when the user IS already logged in.
+    import { adminLogin, redirectIfLoggedIn } from "./js/auth.js";
+
+    redirectIfLoggedIn(); // quietly skip to dashboard if session exists
+
+    const form     = document.getElementById("login-form");
+    const btn      = document.getElementById("login-btn");
+    const errorBox = document.getElementById("login-error");
+
+    function showError(msg) {
+      errorBox.textContent = msg;
+      errorBox.classList.add("visible");
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      errorBox.classList.remove("visible");
+      btn.textContent = "Signing in…";
+      btn.disabled = true;
+
+      try {
+        await adminLogin(
+          document.getElementById("email").value.trim(),
+          document.getElementById("password").value
+        );
+        window.location.href = "admin-dashboard.html";
+      } catch (err) {
+        const messages = {
+          "auth/user-not-found":    "No account found with this email.",
+          "auth/wrong-password":    "Incorrect password. Please try again.",
+          "auth/invalid-email":     "Please enter a valid email address.",
+          "auth/too-many-requests": "Too many failed attempts. Try again later.",
+          "auth/invalid-credential":"Invalid credentials. Check email & password.",
+        };
+        showError(messages[err.code] || "Login failed. Please try again.");
+        btn.textContent = "Sign In";
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>

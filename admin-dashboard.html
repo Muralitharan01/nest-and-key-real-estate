@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard — Nest&Key</title>
+  <meta name="robots" content="noindex, nofollow" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+<!-- Mobile sidebar toggle -->
+<button class="sidebar-toggle" id="sidebar-toggle" aria-label="Menu">
+  <i class="fa-solid fa-bars"></i>
+</button>
+
+<div class="admin-layout">
+
+  <!-- ══════════════════════════════════════════════════
+       SIDEBAR
+  ══════════════════════════════════════════════════════ -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <i class="fa-solid fa-house-chimney"></i>
+        <div>Nest<span>&Key</span><small>Property Management</small></div>
+      </div>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="user-avatar-lg" id="user-initial">A</div>
+      <div class="user-info">
+        <strong>Administrator</strong>
+        <small id="user-email-display">Loading…</small>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main Menu</div>
+      <button class="nav-link active" data-view="dashboard" id="nav-dashboard">
+        <i class="fa-solid fa-gauge-high icon"></i> Dashboard
+      </button>
+      <button class="nav-link" data-view="properties" id="nav-properties">
+        <i class="fa-solid fa-building icon"></i> Manage Properties
+        <span class="nav-badge" id="nav-count">0</span>
+      </button>
+      <button class="nav-link" data-view="enquiries" id="nav-enquiries">
+        <i class="fa-solid fa-envelope icon"></i> Enquiries
+        <span class="nav-badge" id="nav-enq-count" style="background:var(--accent);color:#fff;display:none;">0</span>
+      </button>
+      <button class="nav-link" id="nav-add-btn">
+        <i class="fa-solid fa-circle-plus icon"></i> Add New Property
+      </button>
+      <div class="nav-section-label" style="margin-top:.5rem;">Site</div>
+      <a href="index.html" class="nav-link" target="_blank">
+        <i class="fa-solid fa-globe icon"></i> View Live Site
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="btn-logout" id="logout-btn">
+        <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════════════════ -->
+  <div class="main-content">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <h1 id="page-title">Dashboard Overview</h1>
+        <p id="page-subtitle">Welcome back, here's what's happening today.</p>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-date" id="topbar-date"></span>
+        <div id="topbar-initial" style="width:36px;height:36px;border-radius:50%;background:var(--forest);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.9rem;">A</div>
+      </div>
+    </header>
+
+    <!-- Page Body -->
+    <div class="page-content">
+
+      <!-- ──────────────────────────────────────────────
+           VIEW: DASHBOARD HOME
+      ────────────────────────────────────────────────── -->
+      <div class="view active" id="view-dashboard">
+
+        <!-- Stat Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fa-solid fa-list-check"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">Total Listings</div>
+              <div class="stat-value" id="s-total">0</div>
+              <div class="stat-sub">All active properties</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon purple"><i class="fa-solid fa-gem"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">Luxury Villas</div>
+              <div class="stat-value" id="s-villas">0</div>
+              <div class="stat-sub">Premium villa listings</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fa-solid fa-building-columns"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">Commercial</div>
+              <div class="stat-value" id="s-commercial">0</div>
+              <div class="stat-sub">Office &amp; retail spaces</div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon amber"><i class="fa-solid fa-circle-check"></i></div>
+            <div class="stat-body">
+              <div class="stat-label">Active Status</div>
+              <div class="stat-value" id="s-active">0</div>
+              <div class="stat-sub">Live on the website</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Properties -->
+        <div class="section-header">
+          <div><h2>Recent Listings</h2><p>The 5 most recently added properties.</p></div>
+          <button class="btn-add" data-view="properties">
+            <i class="fa-solid fa-arrow-right"></i> View All
+          </button>
+        </div>
+
+        <div class="table-card recent-table">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Property</th><th>Category</th><th>Price</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recent-tbody">
+                <tr><td colspan="4">
+                  <div class="table-loading">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <p>Loading recent properties…</p>
+                  </div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /view-dashboard -->
+
+      <!-- ──────────────────────────────────────────────
+           VIEW: MANAGE PROPERTIES
+      ────────────────────────────────────────────────── -->
+      <div class="view" id="view-properties">
+
+        <div class="section-header">
+          <div><h2>All Properties</h2><p>Search, filter, edit or remove listings.</p></div>
+          <button class="btn-add" id="open-add-modal">
+            <i class="fa-solid fa-plus"></i> Add Property
+          </button>
+        </div>
+
+        <div class="table-card">
+          <!-- Toolbar -->
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <div class="search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input class="search-input" id="search-input" type="text"
+                       placeholder="Search by name or location…" />
+              </div>
+              <select class="filter-select" id="cat-filter">
+                <option value="">All Categories</option>
+                <option>Residential</option>
+                <option>Commercial</option>
+                <option>Luxury Villas</option>
+                <option>Apartments</option>
+                <option>Plots</option>
+              </select>
+              <span class="results-count" id="results-count">0 results</span>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Property</th><th>Category</th><th>Price</th>
+                  <th>Location</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="main-tbody">
+                <tr><td colspan="5">
+                  <div class="table-loading">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <p>Fetching properties from Firestore…</p>
+                  </div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div class="pagination">
+            <span class="page-info" id="page-info">Showing 0–0 of 0</span>
+            <div class="page-btns" id="page-btns"></div>
+          </div>
+        </div>
+
+      </div><!-- /view-properties -->
+
+      <!-- ──────────────────────────────────────────────
+           VIEW: ENQUIRIES
+      ────────────────────────────────────────────────── -->
+      <div class="view" id="view-enquiries">
+
+        <div class="section-header">
+          <div><h2>Customer Enquiries</h2><p>Manage property enquiries and contact messages.</p></div>
+        </div>
+
+        <div class="table-card">
+          <!-- Toolbar -->
+          <div class="table-toolbar">
+            <div class="table-toolbar-left">
+              <span class="results-count" id="enq-results-count">0 enquiries</span>
+            </div>
+          </div>
+
+          <!-- Table -->
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Date</th><th>Customer</th><th>Contact Info</th><th>Details</th><th>Status</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="enq-tbody">
+                <tr><td colspan="6">
+                  <div class="table-loading">
+                    <i class="fa-solid fa-spinner fa-spin"></i>
+                    <p>Fetching enquiries from Firestore…</p>
+                  </div>
+                </td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /view-enquiries -->
+
+    </div><!-- /page-content -->
+
+    <!-- ──────────────────────────────────────────────
+         FOOTER (strict spec)
+    ────────────────────────────────────────────────── -->
+    <footer style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:.5rem; padding:18px 2rem; border-top:1px solid #e5e7eb; margin-top:50px; font-size:.82rem; color:#6B7280;">
+      <span>© 2024 Nest&amp;Key. All rights reserved.</span>
+      <span>Made with &#9829; in Tiruppur by
+        <a href="https://muralitharan-portfolio.netlify.app/" target="_blank"
+           rel="noopener noreferrer"
+           style="color:inherit; text-decoration:underline;">MuraliTharan_R</a>
+      </span>
+    </footer>
+
+  </div><!-- /main-content -->
+</div><!-- /admin-layout -->
+
+<!-- ══════════════════════════════════════════════════
+     ADD / EDIT PROPERTY MODAL
+══════════════════════════════════════════════════════ -->
+<div class="modal-backdrop" id="property-modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+
+    <div class="modal-header">
+      <div>
+        <h3 id="modal-title">Add New Property</h3>
+        <p id="modal-subtitle">Fill in the details. Starred fields are required.</p>
+      </div>
+      <button class="modal-close" id="close-modal" aria-label="Close">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form id="property-form" novalidate>
+        <input type="hidden" id="edit-id" />
+
+        <div class="form-grid">
+          <!-- Name -->
+          <div class="field-group">
+            <label>Property Name <span class="required">*</span></label>
+            <input class="field-ctrl" id="f-name" type="text" placeholder="e.g. Sunrise Heights" />
+            <span class="field-error" id="err-name">
+              <i class="fa-solid fa-triangle-exclamation"></i> Name is required.
+            </span>
+          </div>
+
+          <!-- Category -->
+          <div class="field-group">
+            <label>Category <span class="required">*</span></label>
+            <select class="field-ctrl" id="f-category">
+              <option value="" disabled selected>Select a category</option>
+              <option>Residential</option>
+              <option>Commercial</option>
+              <option>Luxury Villas</option>
+              <option>Apartments</option>
+              <option>Plots</option>
+            </select>
+            <span class="field-error" id="err-category">
+              <i class="fa-solid fa-triangle-exclamation"></i> Please select a category.
+            </span>
+          </div>
+
+          <!-- Price -->
+          <div class="field-group">
+            <label>Price (₹) <span class="required">*</span></label>
+            <input class="field-ctrl" id="f-price" type="number" placeholder="e.g. 4500000" min="0" />
+            <span class="field-error" id="err-price">
+              <i class="fa-solid fa-triangle-exclamation"></i> Enter a valid positive price.
+            </span>
+          </div>
+
+          <!-- Location -->
+          <div class="field-group">
+            <label>Location <span class="required">*</span></label>
+            <input class="field-ctrl" id="f-location" type="text" placeholder="e.g. Anna Nagar, Chennai" />
+            <span class="field-error" id="err-location">
+              <i class="fa-solid fa-triangle-exclamation"></i> Location is required.
+            </span>
+          </div>
+
+          <!-- Description -->
+          <div class="field-group col-span-2">
+            <label>Description <span class="required">*</span></label>
+            <textarea class="field-ctrl" id="f-desc" rows="3"
+                      placeholder="Key features, amenities, nearby landmarks…"></textarea>
+            <span class="field-error" id="err-desc">
+              <i class="fa-solid fa-triangle-exclamation"></i> Description is required.
+            </span>
+          </div>
+
+          <!-- Multi-Image Upload -->
+          <div class="field-group col-span-2">
+            <label>
+              Property Images <span class="required" id="img-required">*</span>
+              <span style="font-weight:400;color:var(--text-muted);margin-left:.3rem;">(up to 6 photos)</span>
+            </label>
+
+            <!-- Thumbnail grid -->
+            <div class="multi-img-grid" id="multi-img-grid"></div>
+
+            <!-- Drop zone -->
+            <div class="upload-area" id="upload-area" style="margin-top:.6rem;">
+              <input type="file" id="f-image" accept="image/png,image/jpeg,image/webp" multiple />
+              <div class="upload-icon"><i class="fa-solid fa-images"></i></div>
+              <h4>Click to add photos</h4>
+              <p>PNG, JPG, WEBP · Max 5 MB each · Up to 6 images</p>
+            </div>
+
+            <span class="field-error" id="err-image">
+              <i class="fa-solid fa-triangle-exclamation"></i> Add at least one image.
+            </span>
+
+            <!-- Upload progress -->
+            <div class="upload-progress" id="upload-progress">
+              <div class="prog-bar"><div class="prog-fill" id="prog-fill"></div></div>
+              <div class="prog-label" id="prog-label">Uploading photos…</div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" id="cancel-modal">Cancel</button>
+      <button class="btn-save" id="save-btn">
+        <i class="fa-solid fa-floppy-disk"></i>
+        <span id="save-btn-text">Save Property</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirm Dialog -->
+<div class="confirm-backdrop" id="confirm-dialog">
+  <div class="confirm-box">
+    <div class="confirm-icon">🗑️</div>
+    <h3>Delete Property?</h3>
+    <p id="confirm-msg">This action cannot be undone.</p>
+    <div class="confirm-btns">
+      <button class="btn-confirm-cancel" id="confirm-cancel">Cancel</button>
+      <button class="btn-confirm-delete" id="confirm-delete">
+        <i class="fa-solid fa-trash"></i> Delete
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-stack" id="toast-stack"></div>
+
+<!-- ══════════════════════════════════════════════════
+     DASHBOARD SCRIPT (single clean block — no duplicates)
+══════════════════════════════════════════════════════ -->
+<script type="module">
+import { guardAdmin, adminLogout }                      from "./js/auth.js";
+import { listenToProperties, addProperty,
+         updateProperty, deleteProperty }               from "./js/properties.js";
+import { uploadMultipleImages, deleteAllPropertyImages } from "./js/storage.js";
+import { listenToEnquiries, updateEnquiryStatus }        from "./js/enquiries.js";
+
+// ── Constants ────────────────────────────────────────────
+const PAGE_SIZE  = 7;
+const MAX_IMAGES = 6;
+
+// ── State ────────────────────────────────────────────────
+let allProperties     = [];
+let filtered          = [];
+let currentPage       = 1;
+let pendingDeleteId   = null;
+let pendingDeleteImgs = [];
+let existingImageUrls = [];   // URLs already saved in Firestore (on edit)
+let newImageFiles     = [];   // File objects chosen by user (not yet uploaded)
+let modalMode         = "add";
+let allEnquiries      = [];
+
+// ── DOM refs ─────────────────────────────────────────────
+const mainTbody     = document.getElementById("main-tbody");
+const recentTbody   = document.getElementById("recent-tbody");
+const searchInput   = document.getElementById("search-input");
+const catFilter     = document.getElementById("cat-filter");
+const resultsCount  = document.getElementById("results-count");
+const pageInfo      = document.getElementById("page-info");
+const pageBtns      = document.getElementById("page-btns");
+const propertyModal = document.getElementById("property-modal");
+const confirmDialog = document.getElementById("confirm-dialog");
+const navCount      = document.getElementById("nav-count");
+const imgGrid       = document.getElementById("multi-img-grid");
+const uploadArea    = document.getElementById("upload-area");
+const enqTbody      = document.getElementById("enq-tbody");
+const enqResultsCount= document.getElementById("enq-results-count");
+const navEnqCount   = document.getElementById("nav-enq-count");
+
+// ════════════════════════════════════════════════════════
+// AUTH GUARD — redirects to index.html if not logged in
+// ════════════════════════════════════════════════════════
+guardAdmin((user) => {
+  const initial = user.email[0].toUpperCase();
+  document.getElementById("user-initial").textContent       = initial;
+  document.getElementById("topbar-initial").textContent     = initial;
+  document.getElementById("user-email-display").textContent = user.email;
+
+  document.getElementById("topbar-date").textContent =
+    new Date().toLocaleDateString("en-IN", {
+      weekday:"short", day:"numeric", month:"short", year:"numeric"
+    });
+
+  listenToProperties((list) => {
+    allProperties = list;
+    navCount.textContent = list.length;
+    updateStats(list);
+    renderRecentTable(list.slice(0, 5));
+    applyFilters();
+  });
+
+  listenToEnquiries((list) => {
+    allEnquiries = list;
+    const pendingCount = list.filter(e => e.status === "pending").length;
+    navEnqCount.textContent = pendingCount;
+    navEnqCount.style.display = pendingCount > 0 ? "inline-block" : "none";
+    enqResultsCount.textContent = `${list.length} enquiry${list.length !== 1 ? "s" : ""}`;
+    renderEnquiriesTable(list);
+  });
+});
+
+// ════════════════════════════════════════════════════════
+// NAVIGATION
+// ════════════════════════════════════════════════════════
+const views    = document.querySelectorAll(".view");
+const navLinks = document.querySelectorAll(".nav-link[data-view]");
+
+function switchView(name) {
+  views.forEach(v    => v.classList.remove("active"));
+  navLinks.forEach(l => l.classList.remove("active"));
+  document.getElementById(`view-${name}`)?.classList.add("active");
+  document.getElementById(`nav-${name}`)?.classList.add("active");
+  const labels = {
+    dashboard:  ["Dashboard Overview",  "Welcome back, here's what's happening today."],
+    properties: ["Manage Properties",   "Search, filter, edit or remove your listings."],
+    enquiries:  ["Customer Enquiries",  "Manage property enquiries and contact messages."],
+  };
+  const [t, s] = labels[name] || ["Dashboard", ""];
+  document.getElementById("page-title").textContent    = t;
+  document.getElementById("page-subtitle").textContent = s;
+}
+
+document.querySelectorAll("[data-view]").forEach(btn =>
+  btn.addEventListener("click", () => switchView(btn.dataset.view))
+);
+document.getElementById("nav-add-btn").addEventListener("click", () => openModal("add"));
+
+// ════════════════════════════════════════════════════════
+// STAT CARDS — animated count-up
+// ════════════════════════════════════════════════════════
+function updateStats(list) {
+  const count = (cat) => list.filter(p => p.category === cat).length;
+  animCount("s-total",      list.length);
+  animCount("s-villas",     count("Luxury Villas"));
+  animCount("s-commercial", count("Commercial"));
+  animCount("s-active",     list.length);
+}
+
+function animCount(id, target) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let cur = parseInt(el.textContent) || 0;
+  const diff = target - cur;
+  if (diff === 0) return;
+  const step  = Math.ceil(Math.abs(diff) / 25);
+  const timer = setInterval(() => {
+    cur += diff > 0 ? step : -step;
+    const done = diff > 0 ? cur >= target : cur <= target;
+    if (done) { el.textContent = target; clearInterval(timer); }
+    else       { el.textContent = cur; }
+  }, 25);
+}
+
+// ════════════════════════════════════════════════════════
+// RECENT TABLE (top 5 on dashboard home)
+// ════════════════════════════════════════════════════════
+function renderRecentTable(list) {
+  if (!list.length) {
+    recentTbody.innerHTML = `<tr><td colspan="4"><div class="table-empty">
+      <i class="fa-regular fa-folder-open"></i><p>No properties yet.</p>
+    </div></td></tr>`;
+    return;
+  }
+  recentTbody.innerHTML = list.map(p => {
+    const thumb = p.imageUrls?.[0] || p.imageUrl || "";
+    return `<tr>
+      <td><div class="thumb-wrap">
+        <img class="thumb-img" src="${thumb}" alt="" onerror="this.style.visibility='hidden'" />
+        <div>
+          <div class="thumb-name">${p.name}</div>
+          <div class="thumb-loc"><i class="fa-solid fa-location-dot"></i>${p.location}</div>
+        </div>
+      </div></td>
+      <td>${categoryBadge(p.category)}</td>
+      <td class="price-cell">${formatPrice(p.price)}</td>
+      <td><div class="action-cell">
+        <button class="btn-icon edit" onclick="editProp('${p.id}')"><i class="fa-solid fa-pen"></i></button>
+        <button class="btn-icon delete" onclick="confirmDel('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join("");
+}
+
+// ════════════════════════════════════════════════════════
+// MAIN TABLE — search · filter · paginate
+// ════════════════════════════════════════════════════════
+function applyFilters() {
+  const q   = searchInput.value.toLowerCase().trim();
+  const cat = catFilter.value;
+  filtered = allProperties.filter(p => {
+    const ms = !q   || p.name.toLowerCase().includes(q) || p.location.toLowerCase().includes(q);
+    const mc = !cat || p.category === cat;
+    return ms && mc;
+  });
+  currentPage = 1;
+  resultsCount.textContent = `${filtered.length} result${filtered.length !== 1 ? "s" : ""}`;
+  renderMainTable();
+}
+
+function renderMainTable() {
+  const total = filtered.length;
+  const start = (currentPage - 1) * PAGE_SIZE;
+  const end   = Math.min(start + PAGE_SIZE, total);
+  const page  = filtered.slice(start, end);
+
+  pageInfo.textContent = total
+    ? `Showing ${start + 1}–${end} of ${total} properties`
+    : "No properties found";
+
+  if (!page.length) {
+    mainTbody.innerHTML = `<tr><td colspan="5"><div class="table-empty">
+      <i class="fa-regular fa-folder-open"></i><p>No properties match your search.</p>
+    </div></td></tr>`;
+    pageBtns.innerHTML = "";
+    return;
+  }
+
+  mainTbody.innerHTML = page.map(p => {
+    const thumb      = p.imageUrls?.[0] || p.imageUrl || "";
+    const photoCount = p.imageUrls?.length || (p.imageUrl ? 1 : 0);
+    return `<tr>
+      <td><div class="thumb-wrap">
+        <img class="thumb-img" src="${thumb}" alt="" onerror="this.style.visibility='hidden'" />
+        <div>
+          <div class="thumb-name" title="${p.name}">${p.name}</div>
+          <div class="thumb-loc"><i class="fa-solid fa-location-dot"></i>${p.location}
+            ${photoCount > 1 ? `<span style="margin-left:.4rem;color:var(--accent);font-size:.7rem;">&#128247; ${photoCount}</span>` : ""}
+          </div>
+        </div>
+      </div></td>
+      <td>${categoryBadge(p.category)}</td>
+      <td class="price-cell">${formatPrice(p.price)}</td>
+      <td style="font-size:.82rem;color:var(--text-muted);">${p.location}</td>
+      <td><div class="action-cell">
+        <button class="btn-icon edit" title="Edit" onclick="editProp('${p.id}')"><i class="fa-solid fa-pen-to-square"></i></button>
+        <button class="btn-icon delete" title="Delete" onclick="confirmDel('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join("");
+
+  renderPagination(total);
+}
+
+function renderPagination(total) {
+  const tp = Math.ceil(total / PAGE_SIZE);
+  if (tp <= 1) { pageBtns.innerHTML = ""; return; }
+
+  let html = `<button class="page-btn" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? "disabled" : ""}>
+    <i class="fa-solid fa-chevron-left"></i></button>`;
+
+  for (let i = 1; i <= tp; i++) {
+    if (i === 1 || i === tp || Math.abs(i - currentPage) <= 1)
+      html += `<button class="page-btn ${i === currentPage ? "active" : ""}" onclick="goPage(${i})">${i}</button>`;
+    else if (Math.abs(i - currentPage) === 2)
+      html += `<button class="page-btn" disabled>…</button>`;
+  }
+
+  html += `<button class="page-btn" onclick="goPage(${currentPage + 1})" ${currentPage === tp ? "disabled" : ""}>
+    <i class="fa-solid fa-chevron-right"></i></button>`;
+
+  pageBtns.innerHTML = html;
+}
+
+window.goPage = (p) => {
+  const tp = Math.ceil(filtered.length / PAGE_SIZE);
+  if (p < 1 || p > tp) return;
+  currentPage = p;
+  renderMainTable();
+};
+
+searchInput.addEventListener("input",  applyFilters);
+catFilter.addEventListener("change",   applyFilters);
+
+// ════════════════════════════════════════════════════════
+// MULTI-IMAGE GRID
+// ════════════════════════════════════════════════════════
+function renderImgGrid() {
+  imgGrid.innerHTML = "";
+
+  existingImageUrls.forEach((url, i) => imgGrid.appendChild(makeThumb(url, "existing", i)));
+  newImageFiles.forEach((file, i) => imgGrid.appendChild(makeThumb(URL.createObjectURL(file), "new", i)));
+
+  const total = existingImageUrls.length + newImageFiles.length;
+  uploadArea.style.display = total >= MAX_IMAGES ? "none" : "block";
+}
+
+function makeThumb(src, type, index) {
+  const wrap = document.createElement("div");
+  wrap.className = "img-thumb-item";
+  wrap.innerHTML = `
+    <img src="${src}" alt="Photo ${index + 1}" />
+    <button type="button" class="thumb-remove" aria-label="Remove">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    ${index === 0 && type === "existing" ? '<span class="thumb-label">Cover</span>' : ""}`;
+  wrap.querySelector(".thumb-remove").addEventListener("click", () => {
+    if (type === "existing") existingImageUrls.splice(index, 1);
+    else                     newImageFiles.splice(index, 1);
+    renderImgGrid();
+  });
+  return wrap;
+}
+
+document.getElementById("f-image").addEventListener("change", (e) => {
+  const files   = Array.from(e.target.files);
+  const total   = existingImageUrls.length + newImageFiles.length;
+  const canAdd  = MAX_IMAGES - total;
+  const valid   = files.slice(0, canAdd).filter(f => f.size <= 5 * 1024 * 1024);
+
+  if (files.some(f => f.size > 5 * 1024 * 1024))
+    toast("Some files exceed 5 MB and were skipped.", "error");
+  if (files.length > canAdd)
+    toast(`Max ${MAX_IMAGES} images allowed.`, "info");
+
+  newImageFiles.push(...valid);
+  e.target.value = "";
+  renderImgGrid();
+});
+
+// ════════════════════════════════════════════════════════
+// ADD / EDIT MODAL
+// ════════════════════════════════════════════════════════
+function openModal(mode, prop = null) {
+  modalMode = mode;
+  clearForm();
+
+  if (mode === "edit" && prop) {
+    document.getElementById("modal-title").textContent    = "Edit Property";
+    document.getElementById("modal-subtitle").textContent = "Update the fields and save.";
+    document.getElementById("save-btn-text").textContent  = "Save Changes";
+    document.getElementById("img-required").style.display = "none";
+
+    document.getElementById("edit-id").value    = prop.id;
+    document.getElementById("f-name").value     = prop.name;
+    document.getElementById("f-category").value = prop.category;
+    document.getElementById("f-price").value    = prop.price;
+    document.getElementById("f-location").value = prop.location;
+    document.getElementById("f-desc").value     = prop.description;
+
+    existingImageUrls = prop.imageUrls?.length
+      ? [...prop.imageUrls]
+      : (prop.imageUrl ? [prop.imageUrl] : []);
+    newImageFiles = [];
+    renderImgGrid();
+  } else {
+    document.getElementById("modal-title").textContent    = "Add New Property";
+    document.getElementById("modal-subtitle").textContent = "Fill in the details. Starred fields are required.";
+    document.getElementById("save-btn-text").textContent  = "Save Property";
+    document.getElementById("img-required").style.display = "";
+  }
+
+  propertyModal.classList.add("open");
+}
+
+function closeModal() {
+  propertyModal.classList.remove("open");
+  clearForm();
+}
+
+function clearForm() {
+  document.getElementById("property-form").reset();
+  document.getElementById("edit-id").value = "";
+  existingImageUrls = [];
+  newImageFiles     = [];
+  renderImgGrid();
+  document.querySelectorAll(".field-error").forEach(e => e.classList.remove("show"));
+  document.querySelectorAll(".field-ctrl").forEach(e => e.classList.remove("error"));
+  document.getElementById("upload-progress").classList.remove("show");
+  document.getElementById("prog-fill").style.width = "0%";
+}
+
+// ── Validation ────────────────────────────────────────
+function validateForm() {
+  let ok = true;
+  const show = (eId, cId) => { document.getElementById(eId).classList.add("show"); document.getElementById(cId)?.classList.add("error"); ok = false; };
+  const hide = (eId, cId) => { document.getElementById(eId).classList.remove("show"); document.getElementById(cId)?.classList.remove("error"); };
+
+  const name  = document.getElementById("f-name").value.trim();
+  const cat   = document.getElementById("f-category").value;
+  const price = parseFloat(document.getElementById("f-price").value);
+  const loc   = document.getElementById("f-location").value.trim();
+  const desc  = document.getElementById("f-desc").value.trim();
+  const hasImg = existingImageUrls.length + newImageFiles.length > 0;
+
+  name          ? hide("err-name",     "f-name")     : show("err-name",     "f-name");
+  cat           ? hide("err-category", "f-category") : show("err-category", "f-category");
+  price > 0     ? hide("err-price",    "f-price")    : show("err-price",    "f-price");
+  loc           ? hide("err-location", "f-location") : show("err-location", "f-location");
+  desc          ? hide("err-desc",     "f-desc")     : show("err-desc",     "f-desc");
+  (hasImg || modalMode === "edit") ? hide("err-image", "upload-area") : show("err-image", "upload-area");
+
+  return ok;
+}
+
+// ── Save ─────────────────────────────────────────────
+document.getElementById("save-btn").addEventListener("click", async () => {
+  if (!validateForm()) return;
+
+  const saveBtn = document.getElementById("save-btn");
+  const saveTxt = document.getElementById("save-btn-text");
+  saveBtn.disabled = true;
+  saveTxt.textContent = "Saving…";
+
+  const editId = document.getElementById("edit-id").value;
+  const propId = editId || Date.now().toString();
+
+  const data = {
+    name:        document.getElementById("f-name").value.trim(),
+    category:    document.getElementById("f-category").value,
+    price:       parseFloat(document.getElementById("f-price").value),
+    location:    document.getElementById("f-location").value.trim(),
+    description: document.getElementById("f-desc").value.trim(),
+  };
+
+  try {
+    let uploadedUrls = [];
+
+    if (newImageFiles.length) {
+      document.getElementById("upload-progress").classList.add("show");
+      uploadedUrls = await uploadMultipleImages(newImageFiles, propId, (done, total) => {
+        const pct = Math.round((done / total) * 100);
+        document.getElementById("prog-fill").style.width = pct + "%";
+        document.getElementById("prog-label").textContent = `Uploading photo ${done} of ${total}…`;
+      });
+    }
+
+    const allUrls  = [...existingImageUrls, ...uploadedUrls];
+    data.imageUrls = allUrls;
+    data.imageUrl  = allUrls[0] || "";  // backward-compat
+
+    // Check size to prevent Firestore 1MB document size limit crash
+    const docSize = JSON.stringify(data).length;
+    if (docSize > 1000000) {
+      throw new Error(`Document size (${docSize} bytes) exceeds Firestore limit of 1MB.`);
+    }
+
+    if (modalMode === "edit") {
+      await updateProperty(editId, data);
+      toast("Property updated!", "success");
+    } else {
+      await addProperty(data);
+      toast("Property added!", "success");
+    }
+
+    closeModal();
+    switchView("properties");
+  } catch (err) {
+    console.error(err);
+    if (err.message && err.message.includes("exceeds Firestore limit")) {
+      toast("Total image size too large! Reduce photos or configure Storage CORS (see README.md).", "error");
+    } else {
+      toast("Something went wrong. Check console.", "error");
+    }
+  } finally {
+    saveBtn.disabled = false;
+    saveTxt.textContent = modalMode === "edit" ? "Save Changes" : "Save Property";
+    document.getElementById("upload-progress").classList.remove("show");
+  }
+});
+
+window.editProp = (id) => {
+  const p = allProperties.find(x => x.id === id);
+  if (p) openModal("edit", p);
+};
+
+// ════════════════════════════════════════════════════════
+// DELETE
+// ════════════════════════════════════════════════════════
+window.confirmDel = (id) => {
+  pendingDeleteId   = id;
+  const p = allProperties.find(x => x.id === id);
+  pendingDeleteImgs = p?.imageUrls || (p?.imageUrl ? [p.imageUrl] : []);
+  document.getElementById("confirm-msg").textContent =
+    `"${p?.name || "This property"}" will be permanently deleted. This cannot be undone.`;
+  confirmDialog.classList.add("open");
+};
+
+document.getElementById("confirm-cancel").addEventListener("click", () => {
+  confirmDialog.classList.remove("open");
+  pendingDeleteId = null; pendingDeleteImgs = [];
+});
+
+document.getElementById("confirm-delete").addEventListener("click", async () => {
+  if (!pendingDeleteId) return;
+  const btn = document.getElementById("confirm-delete");
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Deleting…';
+  try {
+    await deleteAllPropertyImages(pendingDeleteImgs);
+    await deleteProperty(pendingDeleteId);
+    toast("Property deleted.", "success");
+  } catch {
+    toast("Delete failed. Try again.", "error");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fa-solid fa-trash"></i> Delete';
+    confirmDialog.classList.remove("open");
+    pendingDeleteId = null; pendingDeleteImgs = [];
+  }
+});
+
+// ════════════════════════════════════════════════════════
+// MODAL / LOGOUT / SIDEBAR EVENTS
+// ════════════════════════════════════════════════════════
+document.getElementById("open-add-modal").addEventListener("click", () => openModal("add"));
+document.getElementById("close-modal").addEventListener("click",   closeModal);
+document.getElementById("cancel-modal").addEventListener("click",  closeModal);
+propertyModal.addEventListener("click", (e) => { if (e.target === propertyModal) closeModal(); });
+
+document.getElementById("logout-btn").addEventListener("click", async () => {
+  if (confirm("Sign out of the admin panel?")) await adminLogout();
+});
+
+document.getElementById("sidebar-toggle").addEventListener("click", () => {
+  document.getElementById("sidebar").classList.toggle("open");
+});
+
+// ════════════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════════════
+function formatPrice(n) {
+  return Number(n).toLocaleString("en-IN", {
+    style: "currency", currency: "INR", maximumFractionDigits: 0,
+  });
+}
+
+function categoryBadge(cat) {
+  const map = {
+    "Residential":  "badge-residential",
+    "Commercial":   "badge-commercial",
+    "Luxury Villas":"badge-luxury",
+    "Apartments":   "badge-apartments",
+    "Plots":        "badge-plots",
+  };
+  return `<span class="badge ${map[cat] || "badge-residential"}">${cat}</span>`;
+}
+
+function toast(msg, type = "success") {
+  const icons = { success: "fa-circle-check", error: "fa-circle-xmark", info: "fa-circle-info" };
+  const el = document.createElement("div");
+  el.className = `toast ${type}`;
+  el.innerHTML = `<i class="fa-solid ${icons[type]}"></i> ${msg}`;
+  document.getElementById("toast-stack").appendChild(el);
+  setTimeout(() => el.remove(), 4200);
+}
+
+// ── ENQUIRIES TABLE RENDER ─────────────────────────────────
+function renderEnquiriesTable(list) {
+  if (!list.length) {
+    enqTbody.innerHTML = `<tr><td colspan="6"><div class="table-empty">
+      <i class="fa-regular fa-envelope-open"></i><p>No enquiries yet.</p>
+    </div></td></tr>`;
+    return;
+  }
+
+  enqTbody.innerHTML = list.map(e => {
+    const date = e.createdAt?.seconds 
+      ? new Date(e.createdAt.seconds * 1000).toLocaleDateString("en-IN", {
+          day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+        })
+      : "Pending…";
+
+    const typeBadge = e.type === "property" 
+      ? `<span class="badge badge-commercial"><i class="fa-solid fa-house"></i> Property</span>`
+      : `<span class="badge badge-residential"><i class="fa-solid fa-circle-info"></i> General</span>`;
+
+    const details = e.type === "property"
+      ? `<strong>Prop:</strong> ${e.propertyName || "Unknown"}`
+      : `<strong>Msg:</strong> ${e.message || ""}`;
+
+    const statusBadge = e.status === "pending"
+      ? `<span class="badge badge-pending">Pending</span>`
+      : `<span class="badge badge-contacted">Contacted</span>`;
+
+    const actionBtn = e.status === "pending"
+      ? `<button class="btn-add" style="padding: .4rem .8rem; font-size: .75rem; background: var(--sage); color: var(--forest);" onclick="toggleEnq('${e.id}', 'contacted')"><i class="fa-solid fa-check"></i> Mark Contacted</button>`
+      : `<button class="btn-cancel" style="padding: .4rem .8rem; font-size: .75rem;" onclick="toggleEnq('${e.id}', 'pending')"><i class="fa-solid fa-clock"></i> Mark Pending</button>`;
+
+    return `<tr>
+      <td style="font-size:.82rem;color:var(--text-muted);">${date}</td>
+      <td><strong>${e.name || "Anonymous"}</strong></td>
+      <td>
+        <div style="font-size:.82rem;">
+          ${e.phone ? `<div><i class="fa-solid fa-phone"></i> ${e.phone}</div>` : ""}
+          ${e.email ? `<div><i class="fa-solid fa-envelope"></i> ${e.email}</div>` : ""}
+        </div>
+      </td>
+      <td>
+        <div style="max-width:320px; white-space:normal; font-size:.82rem; line-height:1.4;">
+          <div style="margin-bottom:.2rem;">${typeBadge}</div>
+          <div>${details}</div>
+        </div>
+      </td>
+      <td>${statusBadge}</td>
+      <td>${actionBtn}</td>
+    </tr>`;
+  }).join("");
+}
+
+window.toggleEnq = async (id, newStatus) => {
+  try {
+    await updateEnquiryStatus(id, newStatus);
+    toast("Enquiry status updated!", "success");
+  } catch (err) {
+    console.error("Failed to update status:", err);
+    toast("Update failed. Try again.", "error");
+  }
+};
+</script>
+</body>
+</html>

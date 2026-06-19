@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nest&Key — Find Your Perfect Property</title>
+  <meta name="description" content="Nest&Key is your premium real estate destination. Explore residential, commercial, luxury villas, apartments, and plots across prime locations." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ═══ NAVIGATION ═══════════════════════════════════════════════ -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="#" class="nav-logo">🏠 Nest<span>&Key</span></a>
+
+      <ul class="nav-menu" id="nav-menu">
+        <li><a href="#properties">Properties</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <!-- Admin link intentionally hidden from public nav -->
+      </ul>
+
+      <!-- Mobile hamburger -->
+      <button class="nav-toggle" id="nav-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══ HERO ══════════════════════════════════════════════════════ -->
+  <section class="hero" id="home">
+    <div class="hero-grid" aria-hidden="true"></div>
+    <div class="container">
+      <div class="hero-badge">✦ Premium Real Estate</div>
+      <h1 class="hero-title">
+        Find the Home<br />
+        You've Always <em>Dreamed</em> Of
+      </h1>
+      <p class="hero-sub">
+        Discover curated residential, commercial, and luxury properties across India's most sought-after locations.
+      </p>
+      <div class="hero-cta">
+        <a href="#properties" class="btn-primary">🔍 Browse Properties</a>
+        <a href="#contact"    class="btn-outline">📞 Talk to an Expert</a>
+      </div>
+
+      <!-- Live stats counter updated by landing.js -->
+      <div class="hero-stats">
+        <div class="stat-item">
+          <div class="num"><span id="stat-properties">0</span>+</div>
+          <div class="lbl">Listed Properties</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">5<span>K</span>+</div>
+          <div class="lbl">Happy Clients</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">12+</div>
+          <div class="lbl">Years Experience</div>
+        </div>
+        <div class="stat-item">
+          <div class="num">98<span>%</span></div>
+          <div class="lbl">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PROPERTIES ════════════════════════════════════════════════ -->
+  <section class="properties-section" id="properties">
+    <div class="container">
+      <div class="section-header">
+        <div class="section-header-text">
+          <p class="section-label">✦ Our Listings</p>
+          <h2 class="section-title">Premium Properties</h2>
+          <p class="section-subtitle">
+            Handpicked real estate across every category — from cosy apartments to grand luxury villas.
+          </p>
+        </div>
+        <span style="color: var(--text-muted); font-size:.85rem;">
+          <span id="property-count">0</span> properties found
+        </span>
+      </div>
+
+      <!-- Category Filter Tabs -->
+      <div class="filter-tabs" role="tablist">
+        <button class="filter-btn active" data-category="All">All</button>
+        <button class="filter-btn" data-category="Residential">Residential</button>
+        <button class="filter-btn" data-category="Commercial">Commercial</button>
+        <button class="filter-btn" data-category="Luxury Villas">Luxury Villas</button>
+        <button class="filter-btn" data-category="Apartments">Apartments</button>
+        <button class="filter-btn" data-category="Plots">Plots</button>
+      </div>
+
+      <!-- Property Cards Grid -->
+      <div class="properties-grid" id="properties-grid">
+        <!-- Loader shown until Firestore responds -->
+        <div class="grid-loader" id="grid-loader">
+          <div class="spinner"></div>
+          <p>Fetching properties…</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ABOUT ══════════════════════════════════════════════════════ -->
+  <section class="about-section" id="about">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-img-wrap">
+          <img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=700&q=80&auto=format&fit=crop"
+               alt="Luxury home interior" />
+          <div class="about-img-badge" style="background: var(--mint);">
+            12+ <span style="color:var(--mint);">Years of Trust</span>
+          </div>
+        </div>
+
+        <div class="about-content">
+          <p class="section-label">✦ About Nest&Key</p>
+          <h2 class="section-title">Your Trusted Real Estate Partner</h2>
+          <p style="color: var(--text-muted); font-size:.92rem; margin-bottom:1rem;">
+            At Nest&Key, we believe every family deserves a home that tells their story. With over a decade of expertise, we match buyers with properties that align with their lifestyle and budget — seamlessly and transparently.
+          </p>
+          <p style="color: var(--text-muted); font-size:.92rem;">
+            From first-time buyers to seasoned investors, our team guides you through every step — property search, legal due diligence, negotiations, and beyond.
+          </p>
+
+          <ul class="feature-list">
+            <li class="feature-item"><span class="feature-icon">✓</span> Verified property listings with clear documentation</li>
+            <li class="feature-item"><span class="feature-icon">✓</span> Expert negotiation and transparent pricing</li>
+            <li class="feature-item"><span class="feature-icon">✓</span> End-to-end legal & financial assistance</li>
+            <li class="feature-item"><span class="feature-icon">✓</span> Post-purchase support and property management</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CONTACT ════════════════════════════════════════════════════ -->
+  <section class="contact-section" id="contact">
+    <div class="container">
+      <div style="text-align:center; margin-bottom:3rem;">
+        <p class="section-label">✦ Get In Touch</p>
+        <h2 class="section-title">Let's Find Your Dream Home</h2>
+      </div>
+
+      <div class="contact-grid">
+        <!-- Contact Info -->
+        <div class="contact-info">
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div>
+              <div class="contact-label">Our Office</div>
+              <div class="contact-value">123, Palm Grove Avenue, Tiruppur - 641601, Tamil Nadu</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div>
+              <div class="contact-label">Phone</div>
+              <div class="contact-value">+91 98765 43210</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <div>
+              <div class="contact-label">Email</div>
+              <div class="contact-value">hello@nestandkey.in</div>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">⏰</div>
+            <div>
+              <div class="contact-label">Office Hours</div>
+              <div class="contact-value">Mon – Sat: 9 AM – 7 PM</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Contact Form (static; wire up to EmailJS or FormSubmit as needed) -->
+        <form class="contact-form" id="contact-form" onsubmit="handleContact(event)">
+          <h3 style="font-size:1rem; margin-bottom:.5rem;">Send Us a Message</h3>
+          <div class="form-group">
+            <label for="c-name">Your Name</label>
+            <input id="c-name" type="text" placeholder="e.g. Rahul Sharma" required />
+          </div>
+          <div class="form-group">
+            <label for="c-email">Email Address</label>
+            <input id="c-email" type="email" placeholder="rahul@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="c-phone">Phone Number</label>
+            <input id="c-phone" type="tel" placeholder="+91 98765 43210" />
+          </div>
+          <div class="form-group">
+            <label for="c-msg">Message</label>
+            <textarea id="c-msg" rows="4" placeholder="Tell us what you're looking for…" required></textarea>
+          </div>
+          <button type="submit" class="btn-submit" id="submit-btn">Send Message →</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ ENQUIRY MODAL ════════════════════════════════════════════ -->
+  <div class="modal-overlay" id="enquiry-modal" role="dialog" aria-modal="true">
+    <div class="modal-box" style="max-width:460px; position:relative;">
+      <button class="modal-close" onclick="closeEnquiry()" aria-label="Close">✕</button>
+      <h3>🏠 Property Enquiry</h3>
+      <p style="font-size:.83rem; color:var(--text-muted); margin-bottom:1.2rem;">
+        Fill in your details and we'll get back to you within 24 hours.
+      </p>
+      <div class="form-group">
+        <label>Property</label>
+        <input id="enquiry-property" type="text" readonly
+               style="background:var(--navy-light); border:1px solid var(--border); border-radius:8px; padding:.7rem 1rem; color:var(--text); width:100%; font-family:var(--font-body); font-size:.9rem;" />
+      </div>
+      <br/>
+      <div class="form-group">
+        <label for="enq-name">Your Name</label>
+        <input id="enq-name" type="text" placeholder="Full name" required
+               style="background:var(--navy-light); border:1px solid var(--border); border-radius:8px; padding:.7rem 1rem; color:var(--text); width:100%; font-family:var(--font-body); font-size:.9rem; outline:none;" />
+      </div>
+      <br/>
+      <div class="form-group">
+        <label for="enq-phone">Phone Number</label>
+        <input id="enq-phone" type="tel" placeholder="+91 XXXXX XXXXX"
+               style="background:var(--navy-light); border:1px solid var(--border); border-radius:8px; padding:.7rem 1rem; color:var(--text); width:100%; font-family:var(--font-body); font-size:.9rem; outline:none;" />
+      </div>
+      <br/>
+      <button class="btn-submit" onclick="submitEnquiry()" style="width:100%; border:none; cursor:pointer;">
+        Submit Enquiry
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ FOOTER ════════════════════════════════════════════════════ -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="nav-logo">🏠 Nest<span style="color:var(--mint);">&amp;Key</span></div>
+          <p>Premium real estate solutions for every lifestyle — from starter homes to luxury estates.</p>
+        </div>
+        <div class="footer-col">
+          <h4>Properties</h4>
+          <ul>
+            <li><a href="#properties">Residential</a></li>
+            <li><a href="#properties">Commercial</a></li>
+            <li><a href="#properties">Luxury Villas</a></li>
+            <li><a href="#properties">Apartments</a></li>
+            <li><a href="#properties">Plots</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Use</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Connect</h4>
+          <ul>
+            <li><a href="#">📘 Facebook</a></li>
+            <li><a href="#">📸 Instagram</a></li>
+            <li><a href="#">🐦 Twitter / X</a></li>
+            <li><a href="#">💼 LinkedIn</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2024 Nest&Key. All rights reserved.</p>
+        <p>Crafted with passion for premium real estate</p>
+      </div>
+    </div>
+
+    <!-- ── Credit footer (exact per spec) ── -->
+    <footer style="text-align: center; padding: 20px;">
+      Made with &#9829; in Tiruppur by
+      <a href="https://muralitharan-portfolio.netlify.app/" target="_blank" rel="noopener noreferrer"
+         style="color: inherit; text-decoration: underline;">MuraliTharan_R</a>
+    </footer>
+  </footer>
+
+  <!-- ── Contact form and Enquiry handlers are managed inside js/landing.js ── -->
+
+  <!-- Firebase modular SDK — load landing JS as a module -->
+  <script type="module" src="js/landing.js"></script>
+</body>
+</html>
